@@ -24,8 +24,8 @@ while True:
                 sended_fighters.append(g.fighters)
             else:
                 logging.error(f"{g}")
-                logging.error(f"""is_before: {g.is_before()},
-is_first: {g.is_first_round()}
+                logging.error(f"""is_before: {g._is_before},
+is_first: {g._is_first_round}
 is_fat: {g.is_fat_r_algo()}
 is_out_algo: {g.is_out_algo()}")
 is_out_algo_blank: {g.is_out_algo_with_blank()}")""")
