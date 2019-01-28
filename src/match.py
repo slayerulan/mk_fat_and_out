@@ -118,9 +118,9 @@ R: {self.finishes.get('R')}
 
     def is_out_algo_with_blank(self):
         if ' - ' in self.W_coefs:
-            if self.W_coefs[0] == '-' and self.W_coefs[1] >= 8:
+            if self.W_coefs[0] == ' - ' and self.W_coefs[1] >= 8:
                 return True
-            elif self.W_coefs[1] == '-' and self.W_coefs[0] >= 8:
+            elif self.W_coefs[1] == ' - ' and self.W_coefs[0] >= 8:
                 return True
         return False
 
