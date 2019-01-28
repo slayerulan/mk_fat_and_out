@@ -6,7 +6,7 @@ import telegram
 
 def send_msg(msg):
     BOT_TOKEN = os.environ.get('TOKEN')
-    CHANNEL_ID = -1001232353685
+    CHANNEL_ID = os.environ.get('CHANNEL_ID')
     bot = telegram.Bot(BOT_TOKEN)
     try:
         bot.send_message(CHANNEL_ID, msg, disable_web_page_preview=True,
