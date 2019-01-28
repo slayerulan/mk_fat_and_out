@@ -16,7 +16,7 @@ while True:
                 continue
             if g.fighters in sended_fighters:
                 continue
-            if g.is_before() or g.is_fat_r_algo():
+            if (g.is_before() or g.is_first_round()) and (g.is_fat_r_algo() or g.is_out_algo_with_blank() or g.is_out_algo()):
                 logging.error(f"Sending {g}")
                 send_to_channel.send_msg(str(g))
                 sended_ids.append(g.id)
