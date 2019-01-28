@@ -25,24 +25,24 @@ class Match:
 
     def __repr__(self):
         return f"""
-{self._left_fighter} - {self._right_fighter}
+*{self._left_fighter} - {self._right_fighter}*
 П1 в матче: {self.W_coefs[0]}
 П2 в матче: {self.W_coefs[1]}
-F: {self.finishes.get('F')}
-R: {self.finishes.get('R')}
+кэф на Фат: {self.finishes.get('F')}
+кэф на Руку: {self.finishes.get('R')}
 {'Фаталити и добивание' if self.is_fat_r_algo() else ''}
-{'Матч с аутсайдером' if self.is_out_algo() else ''}
+{'Матч с аутсайдером' if self.is_out_algo() or self.is_out_algo_with_blank() else ''}
 """
 
     def __str__(self):
         return f"""
-{self._left_fighter} - {self._right_fighter}
+*{self._left_fighter} - {self._right_fighter}*
 П1 в матче: {self.W_coefs[0]}
 П2 в матче: {self.W_coefs[1]}
-F: {self.finishes.get('F')}
-R: {self.finishes.get('R')}
+кэф на Фат: {self.finishes.get('F')}
+кэф на Руку: {self.finishes.get('R')}
 {'Фаталити и добивание' if self.is_fat_r_algo() else ''}
-{'Матч с аутсайдером' if self.is_out_algo() else ''}
+{'Матч с аутсайдером' if self.is_out_algo() or self.is_out_algo_with_blank() else ''}
 """
 
     @retry.retry(tries=5, delay=1)
