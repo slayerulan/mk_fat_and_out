@@ -1,4 +1,5 @@
 import logging
+import numpy as np
 
 import retry
 from requests_html import HTMLSession
@@ -25,24 +26,36 @@ class Match:
 
     def __repr__(self):
         return f"""
-*{self._left_fighter} - {self._right_fighter}*
+{'*Фаталити и добивание*' if self.is_fat_r_algo() else ''}
+{'*Матч с аутсайдером*' if self.is_out_algo() or self.is_out_algo_with_blank() else ''}
+{'*Переключатель*' if self.is_trigger() else ''}
+
+{self._left_fighter} - {self._right_fighter}
+П1 в раунде: {self.WR_coefs[0]}
+П2 в раунде: {self.WR_coefs[1]}
+
 П1 в матче: {self.W_coefs[0]}
 П2 в матче: {self.W_coefs[1]}
+
 кэф на Фат: {self.finishes.get('F')}
 кэф на Руку: {self.finishes.get('R')}
-{'Фаталити и добивание' if self.is_fat_r_algo() else ''}
-{'Матч с аутсайдером' if self.is_out_algo() or self.is_out_algo_with_blank() else ''}
 """
 
     def __str__(self):
         return f"""
-*{self._left_fighter} - {self._right_fighter}*
+{'*Фаталити и добивание*' if self.is_fat_r_algo() else ''}
+{'*Матч с аутсайдером*' if self.is_out_algo() or self.is_out_algo_with_blank() else ''}
+{'*Переключатель*' if self.is_trigger() else ''}
+
+{self._left_fighter} - {self._right_fighter}
+П1 в раунде: {self.WR_coefs[0]}
+П2 в раунде: {self.WR_coefs[1]}
+
 П1 в матче: {self.W_coefs[0]}
 П2 в матче: {self.W_coefs[1]}
+
 кэф на Фат: {self.finishes.get('F')}
 кэф на Руку: {self.finishes.get('R')}
-{'Фаталити и добивание' if self.is_fat_r_algo() else ''}
-{'Матч с аутсайдером' if self.is_out_algo() or self.is_out_algo_with_blank() else ''}
 """
 
     @retry.retry(tries=5, delay=1)
@@ -52,7 +65,8 @@ class Match:
         try:
             response = session.get(url, timeout=10)
         except Exception as e:
-            logging.error(e)
+            print(f"69: {e}")
+            # logging.error(e)
             raise e
         json_data = response.json()
         self._json_info = json_data.get('Value')
@@ -62,6 +76,16 @@ class Match:
         self.is_first_round()
         self.fill_fighters()
         self.fill_coefs()
+
+    def is_in_range(self, coef):
+        return np.any([
+            1.6 <= coef <= 1.699,
+            1.7 <= coef <= 1.799,
+            coef == 1.95
+        ])
+
+    def is_trigger(self):
+        return self.is_in_range(self.WR_coefs[0]) or self.is_in_range(self.WR_coefs[1])
 
     def is_before(self):
         score_info = self._json_info.get('SC')
@@ -123,6 +147,17 @@ class Match:
             elif self.W_coefs[1] == ' - ' and self.W_coefs[0] >= 8:
                 return True
         return False
+
+    def is_target(self):
+        return np.all([
+            np.any([
+                self._is_before,
+                self._is_first_round]),
+            np.any([
+                self.is_fat_r_algo(),
+                self.is_out_algo_with_blank(),
+                self.is_out_algo(),
+                self.is_trigger()])])
 
     @property
     def fighters(self):

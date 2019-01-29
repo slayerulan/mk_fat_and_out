@@ -18,6 +18,7 @@ def json_request(session, url):
         json_data = response.json()
     except Exception as e:
         logging.error(e)
+        print(e)
         raise e
     return json_data
 
@@ -33,11 +34,14 @@ def get_current_mirror():
         return session.get(url, timeout=10).url.split('?')[0]
     except Exception as e:
         logging.error(f"{e}")
+        print(e)
         url = 'https://www.google.ru/search?&q=1xbet.com'
         try:
             response = session.get(url, timeout=10)
         except Exception as e:
             logging.error(f"{e}")
+            print(logging)
+            print(f"44: {e}")
             return "Second try, doesn't work"
 
         return f'https://{response.html.search("⇒ {} ⇒")[0]}'

@@ -12,6 +12,7 @@ def json_to_matches(json_data):
             matches.append(Match(g.get('I')))
         except Exception as e:
             logging.error(e)
+            print(f"16: {e}")
             continue
 
     return matches
